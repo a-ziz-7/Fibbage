@@ -16,18 +16,23 @@ len_data = len(data['sentences'])
 
 class Player:
 
-    def __init__(self, name) -> None:
+    def __init__(self, name, score=0) -> None:
         self.name = name
-        self.score = 0
+        self.score = score
         self.choice = None
         self.fooled = []
+    
+    def __lt__(self, __value: object) -> bool:
+        return self.score > __value.score
     
     def __str__(self) -> str:
         return f"Player: {self.name} with {self.score} points"
 
+
 def clear(x):
     for pl in x:
         pl.fooled = []
+
 
 def shuffle(x):
     d = {}
@@ -42,75 +47,75 @@ def shuffle(x):
     return d
 
 
-all_players = [Player('game')]
+def main():
+    all_players = [Player('game')]
 
-num_players = 4# int(input("Enter the amount of players: "))
-for i in range(num_players):
-    name = f"P{i+1}" # input("Enter you nick name: ")
-    player = Player(name)
-    all_players.append(player)
+    num_players = int(input("Enter the amount of players: "))
+    for i in range(num_players):
+        name = input("Enter you nick name: ")
+        player = Player(name)
+        all_players.append(player)
 
-turn = 1
-appeared = set()
-num_players = len(all_players)
-num_turns = 5
+    turn = 1
+    appeared = set()
+    num_players = len(all_players)
+    num_turns = 2
 
-while turn < num_players:
-    turn += 1
-    pool = []
-    ran_num = random.randint(0, len(data['sentences'])-1)
-    while ran_num in appeared:
+    while turn < num_turns:
+        turn += 1
+        pool = []
         ran_num = random.randint(0, len(data['sentences'])-1)
-    appeared.add(ran_num)
-    entity = data['sentences'][ran_num]
-    pool.append(entity['english'])
-    print(f"The sentence is:\n{entity['spanish']}\n{entity['spanish_pronunciation']}")
-    for i in range(1,num_players):
-        # timer
-        guess = input(f'{all_players[i].name} enter you aproximation: ')
-        all_players[i].guess = guess
-        pool.append(guess)
-    ordered_pool = copy.copy(pool)
-    ds = shuffle(pool)
-    # print(pool)
-    # print(ds)
-    # print(f'Please select the right answer from the pool of the answers:')
-    for i in range(len(pool)):
-        print(f"{i+1}) {pool[i]}")
-    for i in range(1, num_players):
-        choice = int(input(f"{all_players[i].name}: "))
-        all_players[i].choice = choice
-        if ds[choice-1] == 0:
-            all_players[0].fooled.append(all_players[i])
-            all_players[i].score += 2
-        elif ds[choice-1] == i:
-            pass
-        elif choice > 0 and choice <= num_players+1:
-            all_players[ds[choice-1]].score += 1
-            all_players[ds[choice-1]].fooled.append(all_players[i])
-        else:
-            pass
-    os.system('clear')
-    for i in range(1, num_players):
-        if len(all_players[i].fooled) != 0:
-            print(f'{all_players[i].name} guessed {ordered_pool[i]}\nand fooled {'player' if len(all_players[i].fooled) == 1 else 'players'}: {" ".join([i.name for i in all_players[i].fooled])}')
-    if len(all_players[0].fooled) == 0:
-        print(f'No one got the right answer: \n{entity['english']}')
-    else:
-        print(f"The right answer:\n{entity['english']}\nWho got it right: {" ".join([i.name for i in all_players[0].fooled])}")
-    
-    if turn != num_turns:
+        while ran_num in appeared:
+            ran_num = random.randint(0, len(data['sentences'])-1)
+        appeared.add(ran_num)
+        entity = data['sentences'][ran_num]
+        pool.append(entity['english'])
+        print(f"The sentence is:\n{entity['spanish']}\n{entity['spanish_pronunciation']}")
+        for i in range(1,num_players):
+            # timer
+            guess = input(f'{all_players[i].name} enter you aproximation: ')
+            all_players[i].guess = guess
+            pool.append(guess)
+        ordered_pool = copy.copy(pool)
+        ds = shuffle(pool)
+        print(f'Please select the right answer from the pool of the answers:')
+        for i in range(len(pool)):
+            print(f"{i+1}) {pool[i]}")
         for i in range(1, num_players):
-            print(all_players[i])
-    
-    clear(all_players)
+            choice = int(input(f"{all_players[i].name}: "))
+            all_players[i].choice = choice
+            if ds[choice-1] == 0:
+                all_players[0].fooled.append(all_players[i])
+                all_players[i].score += 2
+            elif ds[choice-1] == i:
+                pass
+            elif choice > 0 and choice <= num_players+1:
+                all_players[ds[choice-1]].score += 1
+                all_players[ds[choice-1]].fooled.append(all_players[i])
+            else:
+                pass
+        os.system('clear')
+        print(entity['spanish'])
+        for i in range(1, num_players):
+            if len(all_players[i].fooled) != 0:
+                print(f'{all_players[i].name} guessed {ordered_pool[i]}\nand fooled {'player' if len(all_players[i].fooled) == 1 else 'players'}: {" ".join([i.name for i in all_players[i].fooled])}')
+        if len(all_players[0].fooled) == 0:
+            print(f'No one got the right answer: \n{entity['english']}')
+        else:
+            print(f"The right answer:\n{entity['english']}\nWho got it right: {" ".join([i.name for i in all_players[0].fooled])}")
         
+        if turn != num_turns:
+            for i in range(1, num_players):
+                print(all_players[i])
+        
+        clear(all_players)
+            
+
+    print('Final Scores!!!')
+    all_players = all_players[1:]
+    all_players.sort()
+    for i in range(len(all_players)):
+        print(f'{i+1}) {all_players[i]}')
 
 
-
-print('Final Scores!!!')
-for i in range(1, num_players):
-        print(all_players[i])
-    
-
-
+main()
