@@ -13,9 +13,6 @@ len_data = len(data['sentences'])
 print(len_data)
 # print(type(data))
 
-# for i in data['sentences']:
-#     print(f"{i['spanish']} : {i['english']}\n{i['spanish_pronunciation']}\n\n")
-
 class Player:
 
     def __init__(self, name) -> None:
@@ -31,7 +28,7 @@ def shuffle(x):
     for i in range(1000):
         p1, p2 = random.randint(0,len(pool)-1),random.randint(0,len(pool)-1)
         x[p1], x[p2] = x[p2], x[p1]
-    
+        
 all_players = []
 
 num_players = 2 # int(input("Enter the amount of players: "))
