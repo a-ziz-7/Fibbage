@@ -2,7 +2,6 @@ import json
 import random
 import os
 import copy
-import time
 
 os.system('clear')
 
@@ -59,9 +58,9 @@ def main():
     turn = 1
     appeared = set()
     num_players = len(all_players)
-    num_turns = 2
+    num_turns = 5
 
-    while turn < num_turns:
+    while turn < num_turns + 1:
         turn += 1
         pool = []
         ran_num = random.randint(0, len(data['sentences'])-1)
@@ -70,12 +69,13 @@ def main():
         appeared.add(ran_num)
         entity = data['sentences'][ran_num]
         pool.append(entity['english'])
-        print(f"The sentence is:\n{entity['spanish']}\n{entity['spanish_pronunciation']}")
         for i in range(1,num_players):
-            # timer
+            # give each player 30 seconds to answer, if doesnt answer then empty string
+            print(f"The sentence is:\n{entity['spanish']}\n{entity['spanish_pronunciation']} - pronuanciation")
             guess = input(f'{all_players[i].name} enter you aproximation: ')
             all_players[i].guess = guess
             pool.append(guess)
+            os.system('clear')
         ordered_pool = copy.copy(pool)
         ds = shuffle(pool)
         print(f'Please select the right answer from the pool of the answers:')
