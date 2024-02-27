@@ -3,7 +3,7 @@ import random
 import os
 import copy
 import time
-
+# some changes
 os.system('clear')
 
 sentences = open('my_sentences.json','r')
