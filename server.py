@@ -3,7 +3,6 @@ from flask_socketio import SocketIO, emit
 import json
 import random
 import copy
-import os
 
 app = Flask(__name__)
 socketio = SocketIO(app)
@@ -43,9 +42,20 @@ def shuffle():
 def index():
     return render_template('index.html')
 
-@app.route('/game')
+@app.route('/game', methods=['GET', 'POST'])
 def game():
-    return render_template('game.html')
+    if request.method == 'POST':
+        player_name = request.form['player_name']
+        player_sid = request.sid
+        player = Player(player_sid, player_name)
+        players.append(player)
+
+        if len(players) > 4:
+            return render_template('wait.html', message="Waiting for more players to join.")
+        elif len(players) == 4:
+            return render_template('game.html', players=players)
+    
+    return render_template('game.html', players=None)
 
 def game_loop():
     global players
@@ -132,23 +142,21 @@ def game_loop():
         socketio.sleep(10)  # Wait for 10 seconds before the next turn
         clear()
 
-@socketio.on('connect')
-def handle_connect():
+@socketio.on('submit_player_data')
+def handle_submit_player_data(data):
     global players
-    print('Client connected_________________________')
     player_sid = request.sid
-    player_name = input("Enter your nickname: ")
+    player_name = data['player_name']
     player = Player(player_sid, player_name)
     players.append(player)
 
-    if len(players) > 2:
+    if len(players) > 4:
         emit('wait_message', room=player_sid)
-        return
-    elif len(players) == 2:
+    elif len(players) == 4:
         emit('start_game', room=player_sid)
         emit('start_game', room=players[0].sid)
         game_loop()
 
-if __name__ == '__main__':  
-    app.run(port=5000)
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
     socketio.run(app, debug=True)

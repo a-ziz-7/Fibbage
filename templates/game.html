@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
         body {
             font-family: Arial, sans-serif;
         }
+
         #game-container {
             max-width: 600px;
             margin: 0 auto;
@@ -16,6 +18,7 @@
         }
     </style>
 </head>
+
 <body>
     <div id="game-container">
         <h1>Game Interface</h1>
@@ -32,7 +35,7 @@
     <script>
         const socket = io.connect('http://' + document.domain + ':' + location.port);
 
-        socket.on('game_update', function(data) {
+        socket.on('game_update', function (data) {
             const gameUpdateElement = document.getElementById('game-update');
             gameUpdateElement.innerHTML = `
                 <p>Player: ${data.player}</p>
@@ -41,7 +44,7 @@
             `;
         });
 
-        socket.on('submit_guess', function(data) {
+        socket.on('submit_guess', function (data) {
             const guessForm = document.getElementById('guess-form');
             guessForm.innerHTML = `
                 <label for="guess-input">Enter your approximation:</label>
@@ -50,7 +53,7 @@
             `;
         });
 
-        socket.on('select_answer', function(data) {
+        socket.on('select_answer', function (data) {
             const selectAnswerElement = document.getElementById('select-answer');
             selectAnswerElement.innerHTML = `
                 <p>${data.player}, please select the right answer from the pool:</p>
@@ -60,8 +63,16 @@
 
         function submitGuess() {
             const guessInput = document.getElementById('guess-input').value;
+
+            // Simple error check: Ensure the guess input is not empty
+            if (guessInput.trim() === '') {
+                alert('Please enter a guess before submitting.');
+                return;
+            }
+
             socket.emit('submit_guess', { guess: guessInput });
         }
     </script>
 </body>
+
 </html>
