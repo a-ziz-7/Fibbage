@@ -5,7 +5,7 @@ const rl = readline.createInterface({
   output: process.stdout
 });
 
-const sentences = require('./my_sentences.json');
+const sentences = require('../my_sentences.json');
 const data = sentences.sentences;
 const lenData = data.length;
 
