@@ -5,36 +5,17 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles.css">
     <title>Fibbage Game</title>
 </head>
 
 <body>
+    <div class="all_flags" id="all">
 
-    <div id="player-form">
-        <h1>Fibbage Game</h1>
-        <form onsubmit="return joinGame()">
-            <label for="player-name">Enter your name:</label>
-            <input type="text" id="player-name" name="player-name" required>
-            <button type="submit">Join Game</button>
-        </form>
     </div>
 
-    <div id="game-info" style="display: none;">
-        <!-- Game information will be updated here -->
-    </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.js"></script>
-    <script src="/static/game.js"></script>
-
-    <script>
-        function joinGame() {
-            var playerName = document.getElementById('player-name').value;
-            document.getElementById('player-form').style.display = 'none';
-            document.getElementById('game-info').style.display = 'block';
-            socket.emit('join_game', { name: playerName });
-            return false; // Prevents form submission
-        }
-    </script>
+    <!-- Link to the separate JavaScript file -->
+    <script src="../script.js"></script>
 </body>
 
 </html>
