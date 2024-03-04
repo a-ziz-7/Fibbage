@@ -17,7 +17,7 @@ body {
 }
 
 .all_flags div {
-    border: 1px solid #ddd; /* Optional: Add a border to each flag for better visibility */
+    border: 1px solid #b40909; /* Optional: Add a border to each flag for better visibility */
     padding: 10px;
     margin: 40px;
 }
