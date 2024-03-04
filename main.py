@@ -107,7 +107,6 @@ def main():
             print(f'No one got the right answer: \n{entity['english']}\n\n')
         else:
             print(f"The right answer:\n{entity['english']}\nWho got it right: {" ".join([i.name for i in all_players[0].fooled])}\n\n")
-        print(turn)
         if (turn-1) != num_turns:
             for i in range(1, num_players):
                 print(all_players[i])
