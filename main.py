@@ -59,7 +59,7 @@ def main():
     turn = 1
     appeared = set()
     num_players = len(all_players)
-    num_turns = 5
+    num_turns = 2
 
     while turn < num_turns + 1:
         turn += 1
@@ -83,8 +83,9 @@ def main():
         os.system('clear')
         for i in range(1, num_players):
             print(f'Please select the right answer from the pool of the answers:')
-            for i in range(len(pool)):
-                print(f"{i+1}) {pool[i]}")
+            for j in range(len(pool)):
+                print(f"{j+1}) {pool[j]}")
+            
             choice = int(input(f"{all_players[i].name}: "))
             all_players[i].choice = choice
             if ds[choice-1] == 0:
@@ -106,20 +107,24 @@ def main():
             print(f'No one got the right answer: \n{entity['english']}\n\n')
         else:
             print(f"The right answer:\n{entity['english']}\nWho got it right: {" ".join([i.name for i in all_players[0].fooled])}\n\n")
-        
-        if turn != num_turns:
+        print(turn)
+        if (turn-1) != num_turns:
             for i in range(1, num_players):
                 print(all_players[i])
-        time.sleep(5)
-        
+            input('\nPRESS ENTER')
+        else:
+            input('\nPRESS ENTER FOR FINAL SCORES')
+            os.system('clear')
         clear(all_players)
             
-
+    print(f'----------------------------------------------\n')
     print('Final Scores!!!')
     all_players = all_players[1:]
     all_players.sort()
     for i in range(len(all_players)):
         print(f'{i+1}) {all_players[i]}')
+    print(f'\n----------------------------------------------')
+
 
 
 main()
