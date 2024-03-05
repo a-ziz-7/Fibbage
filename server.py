@@ -1,7 +1,9 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, render_template, request, jsonify
+from flask_socketio import SocketIO
 import json
 
 app = Flask(__name__)
+socketio = SocketIO(app)
 
 sentences = open('my_sentences.json','r')
 
@@ -12,11 +14,13 @@ correct = "english"
 language = ""
 pronuanciation = ""
 
+num_players = 0
+
 @app.route('/')
 def index():
     return render_template('index.html')
 
-@app.route('/language_selector', methods=['POST'])
+@app.route('/language_selector', methods=['GET', 'POST'])
 def handle_request():
     data = request.get_json()
     selected_flag = data.get('flag')
@@ -34,11 +38,18 @@ def handle_request():
     response_data = {'message': 'Request received successfully'}
     return jsonify(response_data)
 
-@app.route('/wait')
+@app.route('/wait', methods=['GET', 'POST'])
 def wait():
-    print('!!@$#@#%@#$^#$%&$%^&#$#%!%#$%^$*&(*&%^$#%$%^*&($%&#^@%!$^%&#^*$%&^#%!@$^%&^*&#$^@%2))')
+    global num_players
+    num_players += 1
+    print('Render wait.html:  ' + str(num_players))
     return render_template('wait.html')
 
+@socketio.on('start_game')
+def start_game():
+    for i in range(10):
+        print('Start button pressed')
+    socketio.emit('redirect', {'url': '/'})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    socketio.run(app, debug=True)
