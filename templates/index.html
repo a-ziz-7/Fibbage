@@ -5,30 +5,30 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../static/styles.css">
     <title>Fibbage Game</title>
 </head>
 
 <body>
     <div class="all">
         <div class="all_flags" id="all">
-            <div class="spanish">
-                <img src="../media/spanish.svg" id="svg-container"/>
+            <div class="spanish" onclick="selectFlag('spanish')">
+                <img src="{{ url_for('static', filename='media/spanish.svg') }}" id="svg-container" />
                 <div class="text-container">Spanish</div>
             </div>
-            <div class="russian">
-                <img src="../media/russian.svg" id="svg-container"/>
+            <div class="russian" onclick="selectFlag('russian')">
+                <img src="{{ url_for('static', filename='media/russian.svg') }}" id="svg-container" />
                 <div class="text-container">Russian</div>
             </div>
         </div>
-    
-        <button id="my-button">
+
+        <button id="my-button" onclick="sendRequest()">
             Click
         </button>
     </div>
 
     <!-- Link to the separate JavaScript file -->
-    <script src="../script.js"></script>
+    <script src="../static/script.js"></script>
 </body>
 
 </html>
