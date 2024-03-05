@@ -17,18 +17,19 @@
                 <div class="text-container">Spanish</div>
             </div>
             <div class="russian" onclick="selectFlag('russian')">
-                <img src="{{ url_for('static', filename='media/russian.svg') }}" id="svg-container" />
+                <img src="{{ url_for('static', filename='media/russian.png') }}" id="svg-container" />
                 <div class="text-container">Russian</div>
             </div>
         </div>
 
         <button id="my-button" onclick="sendRequest()">
-            Click
+            Select
         </button>
     </div>
 
     <!-- Link to the separate JavaScript file -->
-    <script src="../static/script.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
 </body>
 
 </html>

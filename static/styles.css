@@ -50,6 +50,6 @@ body {
     margin: 20px;
 }
 
-.all_flags div.selected {
-    border: 2px solid #00ff00; /* Change border color for selected flag */
+.selected {
+    border: 2px solid #1900ff; /* Change border color for selected flag */
 }

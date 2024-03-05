@@ -1,19 +1,23 @@
 var selectedFlag = null;
 
 function selectFlag(flag) {
-    // Reset previously selected flag
-    if (selectedFlag) {
-        document.querySelector("." + selectedFlag).classList.remove("selected");
-    }
+    if (selectedFlag == flag) {
+        document.querySelector("." + flag + " img").classList.remove("selected");
+        selectedFlag = null;
+    } else {
+        // Check if there is a previously selected flag and remove the 'selected' class
+        if (selectedFlag) {
+            document.querySelector("." + selectedFlag + " img").classList.remove("selected");
+        }
 
-    // Set the newly selected flag
-    selectedFlag = flag;
-    document.querySelector("." + flag).classList.add("selected");
+        // Set the newly selected flag and add the 'selected' class to its image
+        selectedFlag = flag;
+        document.querySelector("." + flag + " img").classList.add("selected");
+    }
 }
 
 function sendRequest() {
     if (selectedFlag) {
-        // Perform the action or send the request here
         alert("Request sent for " + selectedFlag);
     } else {
         alert("Please select a flag first.");
