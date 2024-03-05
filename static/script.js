@@ -20,7 +20,26 @@ function selectFlag(flag) {
 
 function sendRequest() {
     if (selectedFlag) {
-        alert("Request sent for " + selectedFlag);
+        // Prepare the data to be sent in the POST request
+        var data = { flag: selectedFlag };
+
+        // Send a POST request to the server
+        fetch('/your-endpoint', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Handle the response from the server if needed
+            console.log('Success:', data);
+            alert("Request sent for " + selectedFlag);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
     } else {
         alert("Please select a flag first.");
     }
