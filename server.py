@@ -8,6 +8,7 @@ sentences = open('my_sentences.json','r')
 sentences_data = json.load(sentences)
 len_sentences = len(sentences_data['sentences'])
 
+correct = "english"
 language = ""
 pronuanciation = ""
 
@@ -15,7 +16,7 @@ pronuanciation = ""
 def index():
     return render_template('index.html')
 
-@app.route('/your-endpoint', methods=['POST'])
+@app.route('/language_selector', methods=['POST'])
 def handle_request():
     data = request.get_json()
     selected_flag = data.get('flag')
@@ -30,8 +31,14 @@ def handle_request():
     print(sentences_data['sentences'][0][language])
     print(sentences_data['sentences'][0][pronuanciation])
 
-    # You can send a response back to the client if needed
-    return jsonify({'message': 'Request received successfully'})
+    response_data = {'message': 'Request received successfully'}
+    return jsonify(response_data)
+
+@app.route('/wait')
+def wait():
+    print('!!@$#@#%@#$^#$%&$%^&#$#%!%#$%^$*&(*&%^$#%$%^*&($%&#^@%!$^%&#^*$%&^#%!@$^%&^*&#$^@%2))')
+    return render_template('wait.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
