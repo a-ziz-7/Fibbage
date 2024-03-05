@@ -22,9 +22,7 @@ function sendRequest() {
     if (selectedFlag) {
         // Prepare the data to be sent in the POST request
         var data = { flag: selectedFlag };
-
-        // Send a POST request to the server
-        fetch('/your-endpoint', {
+        fetch('/language_selector', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -33,9 +31,10 @@ function sendRequest() {
         })
         .then(response => response.json())
         .then(data => {
-            // Handle the response from the server if needed
             console.log('Success:', data);
-            alert("Request sent for " + selectedFlag);
+            fetch('/wait', {
+
+            })
         })
         .catch((error) => {
             console.error('Error:', error);
