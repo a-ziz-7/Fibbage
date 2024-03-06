@@ -1,15 +1,16 @@
-// game_env.js
 var socket = io.connect('http://' + document.domain + ':' + location.port);
 
-function work() {
-    socket.emit('work');
+function update_question() {
+    socket.emit('update_question');
 }
-
-work()
+update_question()
 
 socket.on('update_question', function(data) {
     console.log('Received update_question event:', data);
     var qDiv = document.getElementById('q');
-    qDiv.innerHTML = data.question;
+    var pDiv = document.getElementById('p');
+    var sep = data.question.split("|")
+    qDiv.innerHTML = sep[0];
+    pDiv.innerHTML = sep[1];
 });
 
