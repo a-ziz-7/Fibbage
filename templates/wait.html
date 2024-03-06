@@ -1,10 +1,6 @@
 <style>
-    h1 {
-        color: rgb(54, 110, 14);
-        font-size: 60px;
-    }
-    div {
-        margin-top: 15%;
+    #all_tags {
+        margin-top: 10%;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -14,13 +10,29 @@
         color: rgb(53, 213, 103);
         font-size: larger;
         height: 50px;
-        margin-top: 40%;
+        margin-top: 15%;
         width: 100px;
         border-radius: 40%;
         background-color: rgb(185, 135, 43);
     }
+
+    #area {
+        width: 200px;
+        height: 30px;
+        font-size: 20px;
+        color: rgb(185, 135, 43);
+    }
+
+    #username_card {
+        font-size: 40px;
+        color: rgb(73, 50, 7);
+    }
 </style>
-<div>
-    <h1>WAIT</h1>
-    <button id="start" onclick="startGame()">Start</button>
+<div id="all_tags">
+    <div id="username_card">
+        <div id="username"><b>Username:</b></div>
+        <textarea id="area"></textarea>
+    </div>
+    <button id="Submit" onclick="submitName()">Submit</button>
+    <button id="Start" onclick="startGame()">Start</button>
 </div>

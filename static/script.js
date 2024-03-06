@@ -50,6 +50,11 @@ function sendRequest() {
     }
 }
 
+function submitName() {
+    var text = document.getElementById('area').value;
+    socket.emit('submit_name', { text: text });
+}
+
 function startGame() {
     socket.emit('start_game');
 }
