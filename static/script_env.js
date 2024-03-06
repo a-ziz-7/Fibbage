@@ -14,3 +14,15 @@ socket.on('update_question', function(data) {
     pDiv.innerHTML = sep[1];
 });
 
+function submitA() {
+    var a = document.getElementById('area').value;
+    socket.emit('submit_a', { answer: a });
+}
+
+socket.on('show_results', function(data) {
+    var b = document.querySelector('body');
+    b.innerHTML = '';
+    
+});
+
+

@@ -17,6 +17,7 @@ languages = ["english", "",""]
 num_players = 0
 players = []
 appeared = set()
+active_players = []
 class Player:
     def __init__(self, name, score=0) -> None:
         self.name = name
@@ -52,10 +53,14 @@ def wait():
 @socketio.on('submit_name')
 def submit_name(data):
     text_data = data.get('text', '')
-    for i in range(10):
-        print('Text received from client:', text_data)
-    player = Player(text_data)
-    players.append(player)
+    player_sid = request.sid
+    if player_sid not in active_players:
+        active_players.append(player_sid)
+        player = Player(text_data)
+        players.append(player)
+        print('CREATED')
+    else:
+        players[active_players.index(player_sid)].name = text_data
     print(players)
     
 @socketio.on('update_question')
@@ -72,6 +77,14 @@ def update_question():
 @socketio.on('start_game')
 def start_game():
     socketio.emit('redirect', {'url': '/game_env'}, room=None)
+
+@socketio.on('submit_a')
+def submit_a(data):
+    answer = data.get('answer', '')
+    player_sid = request.sid
+    for i in range(5):
+        print(answer)
+    socketio.emit('show_results')
 
 @app.route('/game_env')
 def game_env():
