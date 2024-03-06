@@ -5,14 +5,13 @@ import json
 app = Flask(__name__)
 socketio = SocketIO(app)
 
-sentences = open('my_sentences.json','r')
+json_data = open('my_sentences.json','r')
 
-sentences_data = json.load(sentences)
+sentences_data = json.load(json_data)
+sentences = sentences_data['sentences']
 len_sentences = len(sentences_data['sentences'])
 
-correct = "english"
-language = ""
-pronuanciation = ""
+languages = ["english", "",""]
 
 num_players = 0
 players = []
@@ -37,8 +36,8 @@ def index():
 def handle_request():
     data = request.get_json()
     selected_flag = data.get('flag')
-    language = 'spanish' if selected_flag == 'spanish' else 'russian'
-    pronuanciation = 'spanish_pronunciation' if selected_flag == 'spanish' else 'russian_pronuanciation'
+    languages[1] = 'spanish' if selected_flag == 'spanish' else 'russian'
+    languages[2] = 'spanish_pronunciation' if selected_flag == 'spanish' else 'russian_pronuanciation'
     response_data = {'message': 'Request received successfully'}
     return jsonify(response_data)
 
@@ -57,6 +56,18 @@ def submit_name(data):
     players.append(player)
     print(players)
     
+@socketio.on('update_question')
+def update_question():
+    # Simulate sending a question from the server to the client
+    question_data = sentences[0][languages[1]]
+    for i in range(10):
+        print(f"{question_data}")
+    socketio.emit('update_question', {'question': question_data}, room=None)
+
+@socketio.on('work')
+def work():
+    for i in range(100):
+        print(123)
 
 @socketio.on('start_game')
 def start_game():

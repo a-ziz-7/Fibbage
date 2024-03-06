@@ -1,5 +1,6 @@
 var selectedFlag = null;
 var socket = io.connect('http://' + document.domain + ':' + location.port);
+// var socket = io.connect('http://localhost:5000');  // Replace with your server URL
 
 function selectFlag(flag) {
     var button = document.getElementById('my-button');
@@ -62,3 +63,9 @@ function startGame() {
 socket.on('redirect', function(data) {
     window.location.href = data.url;
 });
+
+// socket.on('update_question', function(data) {
+//     var qDiv = document.getElementById("q");
+//     console.log(qDiv);
+//     qDiv.innerHTML = data.question;
+// });
