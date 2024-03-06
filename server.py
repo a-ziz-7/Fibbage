@@ -15,6 +15,19 @@ language = ""
 pronuanciation = ""
 
 num_players = 0
+players = []
+class Player:
+    def __init__(self, name, score=0) -> None:
+        self.name = name
+        self.score = score
+        self.choice = None
+        self.fooled = []
+    
+    def __lt__(self, __value: object) -> bool:
+        return self.score > __value.score
+    
+    def __str__(self) -> str:
+        return f"Player: {self.name} with {self.score} points"
 
 @app.route('/')
 def index():
@@ -24,17 +37,8 @@ def index():
 def handle_request():
     data = request.get_json()
     selected_flag = data.get('flag')
-    print(selected_flag)
-    if selected_flag == 'russian':
-        language = 'russian'
-        pronuanciation = 'russian_pronunciation'
-    elif selected_flag == 'spanish':
-        language = 'spanish'
-        pronuanciation = 'spanish_pronunciation'
-    print(language, pronuanciation)
-    print(sentences_data['sentences'][0][language])
-    print(sentences_data['sentences'][0][pronuanciation])
-
+    language = 'spanish' if selected_flag == 'spanish' else 'russian'
+    pronuanciation = 'spanish_pronunciation' if selected_flag == 'spanish' else 'russian_pronuanciation'
     response_data = {'message': 'Request received successfully'}
     return jsonify(response_data)
 
@@ -42,14 +46,25 @@ def handle_request():
 def wait():
     global num_players
     num_players += 1
-    print('Render wait.html:  ' + str(num_players))
     return render_template('wait.html')
+
+@socketio.on('submit_name')
+def submit_name(data):
+    text_data = data.get('text', '')
+    for i in range(10):
+        print('Text received from client:', text_data)
+    player = Player(text_data)
+    players.append(player)
+    print(players)
+    
 
 @socketio.on('start_game')
 def start_game():
-    for i in range(10):
-        print('Start button pressed')
-    socketio.emit('redirect', {'url': '/'})
+    socketio.emit('redirect', {'url': '/game_env'}, room=None)
+
+@app.route('/game_env')
+def game_env():
+    return render_template('game_env.html')
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)
