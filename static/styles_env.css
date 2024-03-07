@@ -85,3 +85,23 @@ button {
     font-size: 40px;
     color: rgb(73, 50, 7);
 }
+
+.result_div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    font-size: 25px;
+}
+
+.pool_choice {
+    width: 300px;
+    height: 130px;
+    background-color: rgb(255, 233, 107);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 40px;
+    flex-wrap: wrap;
+}
+

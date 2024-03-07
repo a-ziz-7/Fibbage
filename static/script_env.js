@@ -3,7 +3,6 @@ console.log('123');
 function update_question() {
     socket.emit('update_question');
 }
-// update_question()
 
 socket.on('update_question', function(data) {
     console.log('Received update_question event:', data);
@@ -19,9 +18,49 @@ function submitA() {
     socket.emit('submit_a', { answer: a });
 }
 
+// var body = document.querySelector('body');
+// var pool = data.pool.split('|'); // Assuming data.pool is a string containing '|' separated values
+
+// // Create a new div element
+// var resultDiv = document.createElement('div');
+
+// // Loop through the array and append each item to the div
+// pool.forEach(function(item) {
+//     var pElement = document.createElement('p');
+//     pElement.textContent = item; // Assuming item is a string; adjust accordingly
+//     resultDiv.appendChild(pElement);
+// });
+
+// // Append the new div to the body
+// body.innerHTML = resultDiv;
+
 socket.on('show_results', function(data) {
-    var b = document.querySelector('body');
-    b.innerHTML += '<h1>GGG</h1>';  
+    var area = document.getElementById('area');
+    area.style.display = 'none';
+    var body = document.getElementById('q_a');
+    console.log(area);
+    var pool = data.pool.split('|'); 
+    var resultDiv = document.createElement('div');
+    resultDiv.classList.add('result_div');
+    var rgbValues = [
+        [247, 178, 103],
+        [247, 157, 101],
+        [244, 132, 95],
+        [242, 112, 89],
+        [242, 92, 84]
+    ];
+    pool.forEach(function(item) {
+        var pElement = document.createElement('div');
+        pElement.textContent = item; // Assuming item is a string; adjust accordingly
+        pElement.classList.add('pool_choice'); // Add the class 'pool_choice'
+        var randomColor = rgbValues[Math.floor(Math.random() * rgbValues.length)];
+        pElement.style.backgroundColor = `rgb(${randomColor.join(', ')})`;
+        resultDiv.appendChild(pElement);
+    });
+    
+    // Append the new div to the body
+    // body.appendChild(resultDiv);
+    body.appendChild(resultDiv);
 });
 
 function submitName() {
