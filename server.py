@@ -1,3 +1,4 @@
+import uuid
 from flask import Flask, render_template, request, jsonify
 from flask_socketio import SocketIO
 import json
@@ -14,14 +15,23 @@ len_sentences = len(sentences_data['sentences'])
 
 languages = ["english", "",""]
 
+
 num_players = 0
 players = []
-appeared = set()
 active_players = []
+
+appeared = set()
+
+answered = []
+answered_num = 0
+
+
 class Player:
-    def __init__(self, name, score=0) -> None:
+    def __init__(self, name, sid, score=0) -> None:
         self.name = name
+        self.sid = sid
         self.score = score
+        self.guess = None
         self.choice = None
         self.fooled = []
     
@@ -41,50 +51,52 @@ def handle_request():
     selected_flag = data.get('flag')
     languages[1] = 'spanish' if selected_flag == 'spanish' else 'russian'
     languages[2] = 'spanish_pronunciation' if selected_flag == 'spanish' else 'russian_pronunciation'
-    response_data = {'message': 'Request received successfully'}
-    return jsonify(response_data)
+    return ""
 
-@app.route('/wait', methods=['GET', 'POST'])
-def wait():
-    global num_players
-    num_players += 1
+@app.route('/env', methods=['GET', 'POST'])
+def env():
     return render_template('wait.html')
-
+    
+    
 @socketio.on('submit_name')
 def submit_name(data):
     text_data = data.get('text', '')
     player_sid = request.sid
     if player_sid not in active_players:
         active_players.append(player_sid)
-        player = Player(text_data)
+        player = Player(text_data, player_sid)
         players.append(player)
         print('CREATED')
     else:
         players[active_players.index(player_sid)].name = text_data
+    print(players[active_players.index(player_sid)].name)
     print(players)
     
 @socketio.on('update_question')
 def update_question():
-    # Simulate sending a question from the server to the client
     ran_num = random.randint(0, len_sentences-1)
     while ran_num in appeared:
         ran_num = random.randint(0, len_sentences-1)
     appeared.add(ran_num)
-    question_data = f"{sentences[ran_num][languages[1]]}|{sentences[ran_num][languages[2]]}"
+    question_data = f"{sentences[ran_num][languages[1]]}|{sentences[ran_num][languages[2]].lower()}"
     print(f"{question_data}")
     socketio.emit('update_question', {'question': question_data}, room=None)
-
+ 
 @socketio.on('start_game')
 def start_game():
     socketio.emit('redirect', {'url': '/game_env'}, room=None)
 
 @socketio.on('submit_a')
 def submit_a(data):
+    global answered
     answer = data.get('answer', '')
     player_sid = request.sid
-    for i in range(5):
-        print(answer)
+    if player_sid not in answered:
+        answered.append(player_sid)
+
     socketio.emit('show_results')
+
+    
 
 @app.route('/game_env')
 def game_env():

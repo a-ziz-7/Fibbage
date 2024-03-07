@@ -1,5 +1,11 @@
 body {
     background-color: rgb(143, 120, 73);
+    background-image: url('media/fmmt.jpeg');
+    background-size: cover; 
+    background-position: center 20%;
+    background-size: 25% 25%; 
+    background-repeat: no-repeat;
+    height: 100vh; 
     align-items: center;
     display: flex;
     justify-content: center;
@@ -43,9 +49,39 @@ body {
 #submit {
     color: rgb(53, 213, 103);
     font-size: larger;
-    height: 50px;
+    height: 10%;
     margin-top: 50px;
     width: 100px;
     border-radius: 40%;
     background-color: rgb(185, 135, 43);
+}
+
+#all_tags {
+    margin-top: 10%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+button {
+    color: rgb(53, 213, 103);
+    font-size: larger;
+    height: 50px;
+    margin-top: 15%;
+    width: 100px;
+    border-radius: 40%;
+    background-color: rgb(185, 135, 43);
+}
+
+#area_username {
+    width: 200px;
+    height: 30px;
+    font-size: 20px;
+    margin-top: 10%;
+    color: rgb(185, 135, 43);
+}
+
+#username_card {
+    font-size: 40px;
+    color: rgb(73, 50, 7);
 }

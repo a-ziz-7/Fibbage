@@ -19,6 +19,10 @@ function selectFlag(flag) {
     }
 }
 
+function start_game() {
+    socket.emit('start_game');
+}
+
 function sendRequest() {
     if (selectedFlag) {
         // Prepare the data to be sent in the POST request
@@ -30,19 +34,13 @@ function sendRequest() {
             },
             body: JSON.stringify(data),
         })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Success:', data);
-            
-            return fetch('/wait', {
-                method: 'POST',
-            });
-        })
-        .then(response => response.text())
-        .then(html => {
-            // console.log('Wait Success:', waitData);
-            document.querySelector('body').innerHTML = html;
-        })
+        .then(
+           start_game()
+        )
+        // .then(response => response.text())
+        // .then(html => {
+        //     document.querySelector('body').innerHTML = html;
+        // })
         .catch((error) => {
             console.error('Error:', error);
         });
@@ -56,9 +54,9 @@ function submitName() {
     socket.emit('submit_name', { text: text });
 }
 
-function startGame() {
-    socket.emit('start_game');
-}
+// function startGame() {
+//     socket.emit('start_game');
+// }
 
 socket.on('redirect', function(data) {
     window.location.href = data.url;
