@@ -1,7 +1,8 @@
 var selectedFlag = null;
 var socket = io.connect('http://' + document.domain + ':' + location.port);
 // var socket = io.connect('http://localhost:5000');  // Replace with your server URL
-
+var xx = 1;
+console.log(xx+" ");
 function selectFlag(flag) {
     var button = document.getElementById('my-button');
 

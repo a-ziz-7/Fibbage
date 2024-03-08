@@ -90,18 +90,46 @@ button {
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-direction: row;
+    flex-wrap: wrap; /* Allow content to wrap to a new line */
+    width: 1400px; /* Adjusted width to accommodate the layout */
     font-size: 25px;
 }
 
-.pool_choice {
-    width: 300px;
-    height: 130px;
-    background-color: rgb(255, 233, 107);
+ .pool_choice {
+    width: 300px; /* Fixed width for each element */
+    height: 130px; /* Fixed height for each element */
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 40px;
-    flex-wrap: wrap;
+    margin: 25px;
+    padding: 5px;
+ }
+
+.result_div_2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
 }
 
+.cg {
+    width: 107%;
+    align-items: center;
+    justify-content: center;
+}
+
+.row1 {
+    width: inherit; /* Take the width from the parent (.result_div_2) */
+    margin-left: 10px;
+    height: 40px;
+    font-size: 30px;
+    margin-top: 30px;
+    border-bottom: 1px solid #000000;
+}
+
+.row2 {
+    width: inherit; 
+    margin-left: 10px;
+    height: 40px;
+    font-size: 30px;
+}

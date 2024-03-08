@@ -1,5 +1,6 @@
 var socket = io.connect('http://' + document.domain + ':' + location.port);
-console.log('123');
+var ans;
+
 function update_question() {
     socket.emit('update_question');
 }
@@ -14,25 +15,15 @@ socket.on('update_question', function(data) {
 });
 
 function submitA() {
-    var a = document.getElementById('area').value;
-    socket.emit('submit_a', { answer: a });
+    var a = document.getElementById('area');
+
+    if (a.style.display !== 'none') {
+        socket.emit('submit_a', { answer: a.value });
+        a = null;
+    } else {
+        socket.emit('answer_submited', {ans:ans});
+    }
 }
-
-// var body = document.querySelector('body');
-// var pool = data.pool.split('|'); // Assuming data.pool is a string containing '|' separated values
-
-// // Create a new div element
-// var resultDiv = document.createElement('div');
-
-// // Loop through the array and append each item to the div
-// pool.forEach(function(item) {
-//     var pElement = document.createElement('p');
-//     pElement.textContent = item; // Assuming item is a string; adjust accordingly
-//     resultDiv.appendChild(pElement);
-// });
-
-// // Append the new div to the body
-// body.innerHTML = resultDiv;
 
 socket.on('show_results', function(data) {
     var area = document.getElementById('area');
@@ -42,6 +33,9 @@ socket.on('show_results', function(data) {
     var pool = data.pool.split('|'); 
     var resultDiv = document.createElement('div');
     resultDiv.classList.add('result_div');
+    resultDiv.id = 'rd1';
+    resultDiv.style.width = '';
+    var x = 0
     var rgbValues = [
         [247, 178, 103],
         [247, 157, 101],
@@ -50,18 +44,98 @@ socket.on('show_results', function(data) {
         [242, 92, 84]
     ];
     pool.forEach(function(item) {
+        x += 1
         var pElement = document.createElement('div');
         pElement.textContent = item; // Assuming item is a string; adjust accordingly
         pElement.classList.add('pool_choice'); // Add the class 'pool_choice'
+        pElement.id = x.toString();
         var randomColor = rgbValues[Math.floor(Math.random() * rgbValues.length)];
         pElement.style.backgroundColor = `rgb(${randomColor.join(', ')})`;
+        pElement.addEventListener('click', function() {
+            boxSelect(pElement.id); 
+        });
         resultDiv.appendChild(pElement);
     });
-    
-    // Append the new div to the body
-    // body.appendChild(resultDiv);
+    if (x>4) {
+        resultDiv.style.width = '90%';
+    }else if (x==4) {
+        resultDiv.style.width = '800px';
+    }
     body.appendChild(resultDiv);
 });
+
+socket.on('show_answers', function(data) {
+    var body = document.getElementById('q_a');
+    var answer_data = data.answers.split('|');
+    var resultDiv = document.createElement('div');
+    resultDiv.classList.add('result_div_2'); // Add a class to the result div
+
+    for (var i = 0; i < answer_data.length; i++) {
+        var player_data = answer_data[i].split('*');
+        var playerDiv = document.createElement('div');
+        playerDiv.classList.add('cg'); // Add a class to the player div
+
+        if (i === 0) {
+            // For correct answer
+            var answerDiv = document.createElement('div');
+            answerDiv.classList.add('row1');
+            answerDiv.style.backgroundColor = getRandomColor(); // Set random color for row1
+            answerDiv.textContent = 'Correct answer: ' + player_data[1];
+            playerDiv.appendChild(answerDiv);
+
+            var whoGotItDiv = document.createElement('div');
+            whoGotItDiv.classList.add('row2'); // Add a class to the whoGotItDiv
+            whoGotItDiv.style.backgroundColor = getRandomColor();
+            whoGotItDiv.textContent = player_data[2].length > 0 ? 'Who got it right: ' + player_data[2] : 'No one got it right';
+            playerDiv.appendChild(whoGotItDiv);
+        } else {
+            // For other player guesses
+            var guessDiv = document.createElement('div');
+            guessDiv.classList.add('row1');
+            guessDiv.style.backgroundColor = getRandomColor();
+            guessDiv.textContent = 'Player ' + player_data[0] + ' guessed ' + player_data[1];
+            playerDiv.appendChild(guessDiv);
+
+            var fooledDiv = document.createElement('div');
+            fooledDiv.classList.add('row2'); // Add a class to the fooledDiv
+            fooledDiv.style.backgroundColor = getRandomColor();
+            fooledDiv.textContent = player_data[2].length > 0 ? 'Who got fooled: ' + player_data[2] : 'No one got fooled';
+            playerDiv.appendChild(fooledDiv);
+        }
+
+        resultDiv.appendChild(playerDiv);
+    }
+    var tbr = document.getElementById('rd1');
+    tbr.style.display = 'none';
+    body.appendChild(resultDiv);
+});
+
+
+
+
+    // var answer_data = data.answers.split('|');
+    // var resultDiv = document.createElement('div');
+    // console.log(data.answers)
+    // for (var i = 0; i < answer_data.length; i++){
+    //     player_data = answer_data[i].split('*');
+    //     var playerDiv = document.createElement('div');
+    //     if (i == 0) {
+    //         playerDiv.textContent = 'Correct answer: ' + player_data[1] +
+    //         (player_data[2].length > 0 ? ('\nWho got it right: ' + player_data[2]) : '\nNo one got it right.');
+    //         console.log(
+    //             'Correct answer: ' + player_data[1] + (player_data[2].length > 0 ? ('\nWho got it right: ' + player_data[2]) : '\nNo one got it right.')
+    //         );
+    //     } else {
+    //         playerDiv.textContent = 'Player ' + player_data[0] + ' guessed ' + player_data[1] +
+    //         (player_data[2].length > 0 ? ('\nWho got fooled: ' + player_data[2]) : '\nNo one got fooled.');
+    //         console.log('Player ' + player_data[0] +' guessed '  + player_data[1] + 
+    //         (player_data[2].length > 0 ? ('\nWho got fooled: ' + player_data[2]) : '\nNo one got fooled.')
+    //         );
+    //     }
+    //     resultDiv.appendChild(playerDiv);
+    // }
+    // document.body.appendChild(resultDiv);
+
 
 function submitName() {
     var text = document.getElementById('area_username').value;
@@ -72,6 +146,34 @@ function submitName() {
     }
     socket.emit('submit_name', { text: text });
 }
+
+var selectedElementId = null; 
+
+function boxSelect(itemId) {
+    var item = document.getElementById(itemId);
+    if (!item) {
+        console.error("Element not found for ID:", itemId);
+        return;
+    }
+    if (selectedElementId === itemId) {
+        item.style.border = '';
+        selectedElementId = null;
+    } else {
+        if (selectedElementId) {
+            var prevSelectedElement = document.getElementById(selectedElementId);
+            if (prevSelectedElement) {
+                prevSelectedElement.style.border = '';
+            } else {
+                console.error("Previously selected element not found for ID:", selectedElementId);
+            }
+        }
+        selectedElementId = itemId;
+        item.style.border = '2px solid #ff0000';
+        ans = item.id;
+        socket.emit('box_selected', {ans:item.id});
+    }
+}
+
 
 function startEnv() {
 
@@ -91,7 +193,26 @@ function startEnv() {
     });
 }
 
+function getRandomColor() {
+    var rgbValues = [
+        [247, 178, 103],
+        [247, 157, 101],
+        [244, 132, 95],
+        [242, 112, 89],
+        [242, 92, 84]
+    ];
+    var randomIndex = Math.floor(Math.random() * rgbValues.length);
+    return `rgb(${rgbValues[randomIndex].join(', ')})`;
+}
 
 socket.on('redirect', function(data) {
     window.location.href = data.url;
+});
+
+// Add this in your JavaScript code
+socket.on('render_env_html', function(data) {
+    document.querySelector('body').style.backgroundImage = 'none';
+    document.querySelector('body').style.height = '69vh';
+    document.querySelector('body').innerHTML = data.html;
+    update_question();
 });
