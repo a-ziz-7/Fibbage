@@ -12,10 +12,8 @@ json_data = open('my_sentences.json','r')
 sentences_data = json.load(json_data)
 sentences = sentences_data['sentences']
 len_sentences = len(sentences_data['sentences'])
+languages = ["english", "spanish","spanish_pronunciation"]
 
-languages = ["english", "",""]
-
-num_players = 0
 players = []
 active_players = []
 
@@ -65,8 +63,7 @@ def env():
     # Emit a message to all connected clients when /env is accessed
     socketio.emit('render_env_html', {'html': render_template('wait.html')}, room=None)
     return render_template('wait.html')
-    
-    
+        
 @socketio.on('submit_name')
 def submit_name(data):
     text_data = data.get('text', '')
@@ -102,15 +99,14 @@ def start_game():
 def submit_a(data):
     global answered, pool, map_pool
     answer = data.get('answer', '')
-    for i in range(10):
-        print(answer)
+    print(answer)
     player_sid = request.sid
     if player_sid not in answered:
         answered.append(player_sid)
         print(players, "\n  ", answered)
         temp_player = get_player(player_sid)
         temp_player.guess = answer
-        if len(answered) == len(players):
+        if len(answered) == len(active_players):
             for i in players:
                 pool.append(i.guess)
             map_pool = shuffle(pool)
@@ -128,7 +124,7 @@ def answer_submited(responce):
     player_sid = request.sid
     if player_sid not in answered_box:
         answered_box.append(player_sid)
-        ind_ans = answered.index(player_sid)
+        ind_ans = active_players.index(player_sid)
         choice = map_pool[int(responce['ans'])-1]
         mp = players[ind_ans]
         if choice == 0:
@@ -139,7 +135,8 @@ def answer_submited(responce):
         else:
             players[choice-1].fooled.append(mp.name)
             players[choice-1].score += 1
-        if len(players) == len(answered_box):
+        print(answered_box, active_players, len(answered_box) == len(active_players))
+        if len(answered_box) == len(active_players):
             x = f'0*{cr_an}*{", ".join(correct_answer)}|'
             x += chopchopselection()
             print(x)
@@ -163,6 +160,12 @@ def game_env():
 
 @socketio.on('new_new')
 def new_new():
+    global answered, pool, answered_box, correct_answer
+    answered = []
+    pool = []
+    answered_box = []
+    clear()
+    correct_answer = []
     socketio.emit('new_round')
 
 def get_player(sid):
@@ -198,6 +201,13 @@ def chopchopselection():
         ans += i.name+"*"+i.guess+"*"+", ".join(i.fooled)+"*"+str(i.score)+"|"
     ans = ans[:-1]
     return ans
+
+def clear():
+    global players
+    for i in players:
+        i.guess = None
+        i.choice = None
+        i.fooled = []
 
 
 if __name__ == '__main__':
