@@ -120,7 +120,7 @@ button {
 
 .row1 {
     width: inherit; /* Take the width from the parent (.result_div_2) */
-    margin-left: 10px;
+    padding-left: 20px;
     height: 40px;
     font-size: 30px;
     margin-top: 30px;
@@ -129,7 +129,7 @@ button {
 
 .row2 {
     width: inherit; 
-    margin-left: 10px;
+    padding-left: 20px;
     height: 40px;
     font-size: 30px;
 }

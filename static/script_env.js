@@ -16,7 +16,13 @@ socket.on('update_question', function(data) {
 
 function submitA() {
     var a = document.getElementById('area');
-
+    var b = document.getElementById('sumbit_fucking_3');
+    if (b) {
+        console.log('asdjkbhllbhjasabldjsiufeipuverpugv9prgrg9834buvvbil');
+        b = null;
+        socket.emit('new_new');
+        return;
+    }
     if (a.style.display !== 'none') {
         socket.emit('submit_a', { answer: a.value });
         a = null;
@@ -69,6 +75,7 @@ socket.on('show_answers', function(data) {
     var answer_data = data.answers.split('|');
     var resultDiv = document.createElement('div');
     resultDiv.classList.add('result_div_2'); // Add a class to the result div
+    resultDiv.id = 'sumbit_fucking_3';
 
     for (var i = 0; i < answer_data.length; i++) {
         var player_data = answer_data[i].split('*');
@@ -86,14 +93,14 @@ socket.on('show_answers', function(data) {
             var whoGotItDiv = document.createElement('div');
             whoGotItDiv.classList.add('row2'); // Add a class to the whoGotItDiv
             whoGotItDiv.style.backgroundColor = getRandomColor();
-            whoGotItDiv.textContent = player_data[2].length > 0 ? 'Who got it right: ' + player_data[2] : 'No one got it right';
+            whoGotItDiv.textContent = player_data[2].length > 0 ? 'Players who got it right: ' + player_data[2] : 'No one got it right';
             playerDiv.appendChild(whoGotItDiv);
         } else {
             // For other player guesses
             var guessDiv = document.createElement('div');
             guessDiv.classList.add('row1');
             guessDiv.style.backgroundColor = getRandomColor();
-            guessDiv.textContent = 'Player ' + player_data[0] + ' guessed ' + player_data[1];
+            guessDiv.textContent = 'Player ' + player_data[0] + ' (' + player_data[3] +' points) guessed ' + player_data[1];
             playerDiv.appendChild(guessDiv);
 
             var fooledDiv = document.createElement('div');
@@ -109,9 +116,6 @@ socket.on('show_answers', function(data) {
     tbr.style.display = 'none';
     body.appendChild(resultDiv);
 });
-
-
-
 
     // var answer_data = data.answers.split('|');
     // var resultDiv = document.createElement('div');
@@ -174,7 +178,6 @@ function boxSelect(itemId) {
     }
 }
 
-
 function startEnv() {
 
     fetch('/env', {
@@ -192,6 +195,16 @@ function startEnv() {
         console.error('Error:', error);
     });
 }
+
+socket.on('new_round', function(data) {
+    for (let i = 0; i < 100; i++) {
+        console.log(i);
+    }
+    var area = document.getElementById('area');
+    area.style.display = 'flex';
+    var rd1 = document.getElementById('rd1');
+    rd1.style.display = 'none';
+});
 
 function getRandomColor() {
     var rgbValues = [

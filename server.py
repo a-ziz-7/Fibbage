@@ -118,7 +118,6 @@ def submit_a(data):
             print(pool)
             socketio.emit('show_results', {'pool':correct_pool})
     
-
 @socketio.on('box_selected')
 def box_selected(responce):
     print(responce)
@@ -147,9 +146,24 @@ def answer_submited(responce):
             socketio.emit('show_answers', {'answers':x})
         print_mp()
 
+@socketio.on('disconnect')
+def handle_disconnect():
+    player_sid = request.sid
+    if player_sid in active_players:
+        active_players.remove(player_sid)
+        player = get_player(player_sid)
+        if player:
+            players.remove(player)
+            print(f"Player {player.name} disconnected.")
+    print(players)
+
 @app.route('/game_env')
 def game_env():
     return render_template('game_env.html')
+
+@socketio.on('new_new')
+def new_new():
+    socketio.emit('new_round')
 
 def get_player(sid):
     global players
@@ -181,7 +195,7 @@ def chopchopselection():
     # player name, player guess, player fooled
     ans = ""
     for i in players:
-        ans += i.name+"*"+i.guess+"*"+", ".join(i.fooled)+"|"
+        ans += i.name+"*"+i.guess+"*"+", ".join(i.fooled)+"*"+str(i.score)+"|"
     ans = ans[:-1]
     return ans
 
