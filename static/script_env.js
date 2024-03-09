@@ -1,18 +1,6 @@
 var socket = io.connect('http://' + document.domain + ':' + location.port);
 var ans;
-
-function update_question() {
-    socket.emit('update_question');
-}
-
-socket.on('update_question', function(data) {
-    console.log('Received update_question event:', data);
-    var qDiv = document.getElementById('q');
-    var pDiv = document.getElementById('p');
-    var sep = data.question.split("|")
-    qDiv.innerHTML = sep[0];
-    pDiv.innerHTML = sep[1];
-});
+var turn = 0;
 
 function submitA() {
     var a = document.getElementById('area');
@@ -25,7 +13,7 @@ function submitA() {
             return;
         }
     }
-    if (a.style.display !== 'none') {
+    if (a && a.style.display !== 'none') {
         socket.emit('submit_a', { answer: a.value });
         console.log('case: text area read and boxes generate');
         a = null;
@@ -34,6 +22,87 @@ function submitA() {
         socket.emit('answer_submited', {ans:ans});
     }
 }
+
+function update_question() {
+    socket.emit('update_question');
+}
+
+function submitName() {
+    var text = document.getElementById('area_username').value;
+    var b = document.getElementById('Submit');
+    if (b && b.innerText === 'Submit') {
+        b.innerText = 'Rename';
+    }
+    socket.emit('submit_name', { text: text });
+}
+
+var selectedElementId = null; 
+
+function boxSelect(itemId) {
+    var item = document.getElementById(itemId);
+    // console.log('BS HEADER');
+    if (selectedElementId === itemId) {
+        // console.log('BS SELECTED_ID WAS SELECTED BEFORE');
+        item.style.border = '';
+        selectedElementId = null;
+    } else {
+        // console.log('BS NEW SELECT');
+        if (selectedElementId) {
+            var prevSelectedElement = document.getElementById(selectedElementId);
+            if (prevSelectedElement) {
+                // console.log('PREV CASE');
+                prevSelectedElement.style.border = '';
+            } else {
+                console.error("Previously selected element not found for ID:", selectedElementId);
+            }
+        }
+        // console.log('SHOULD LIGHT UP!!!');
+        selectedElementId = itemId;
+        // console.log(item.style.border);s
+        item.style.border = '2px solid #ff0000';
+        ans = item.id;
+        socket.emit('box_selected', {ans:item.id});
+    }
+}
+
+function getRandomColor() {
+    var rgbValues = [
+        [247, 178, 103],
+        [247, 157, 101],
+        [244, 132, 95],
+        [242, 112, 89],
+        [242, 92, 84]
+    ];
+    var randomIndex = Math.floor(Math.random() * rgbValues.length);
+    return `rgb(${rgbValues[randomIndex].join(', ')})`;
+}
+
+function startEnv() {
+
+    fetch('/env', {
+        method: 'POST',
+    })
+    .then(response => response.text())
+    .then(html => {
+        // would be nice to send the name here too
+        document.querySelector('body').style.backgroundImage = 'none';
+        document.querySelector('body').style.height= '69vh';
+        document.querySelector('body').innerHTML = html;
+        update_question();
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+socket.on('update_question', function(data) {
+    console.log('Received update_question event:', data);
+    var qDiv = document.getElementById('q');
+    var pDiv = document.getElementById('p');
+    var sep = data.question.split("|")
+    qDiv.innerHTML = sep[0];
+    pDiv.innerHTML = sep[1];
+});
 
 socket.on('show_results', function(data) {
     var area = document.getElementById('area');
@@ -85,8 +154,9 @@ socket.on('show_answers', function(data) {
 
     var tbr = document.getElementById('rd1');
     console.log(tbr.innerHTML);
-    tbr.innerHTML = '';
-    tbr.style.display = 'none';
+    // tbr.innerHTML = '';
+    // tbr.style.display = 'none';
+    tbr.remove();
 
     for (var i = 0; i < answer_data.length; i++) {
         var player_data = answer_data[i].split('*');
@@ -127,46 +197,6 @@ socket.on('show_answers', function(data) {
     body.appendChild(resultDivv);
 });
 
-
-function submitName() {
-    var text = document.getElementById('area_username').value;
-    var b = document.getElementById('Submit');
-    if (b && b.innerText === 'Submit') {
-        b.innerText = 'Rename';
-    }
-    socket.emit('submit_name', { text: text });
-}
-
-var selectedElementId = null; 
-
-function boxSelect(itemId) {
-    var item = document.getElementById(itemId);
-    // console.log('BS HEADER');
-    if (selectedElementId === itemId) {
-        // console.log('BS SELECTED_ID WAS SELECTED BEFORE');
-        item.style.border = '';
-        selectedElementId = null;
-    } else {
-        // console.log('BS NEW SELECT');
-        if (selectedElementId) {
-            var prevSelectedElement = document.getElementById(selectedElementId);
-            if (prevSelectedElement) {
-                // console.log('PREV CASE');
-                prevSelectedElement.style.border = '';
-            } else {
-                console.error("Previously selected element not found for ID:", selectedElementId);
-            }
-        }
-        // console.log('SHOULD LIGHT UP!!!');
-        selectedElementId = itemId;
-        // console.log(item.style.border);s
-        item.style.border = '2px solid #ff0000';
-        ans = item.id;
-        socket.emit('box_selected', {ans:item.id});
-    }
-}
-
-
 socket.on('new_round', function(data) {
     console.log('new round generated');
     update_question();
@@ -175,45 +205,13 @@ socket.on('new_round', function(data) {
     area.value = '';
     selectedElementId = null;
     var sf3 = document.getElementById('sumbit_fucking_3');
-    sf3.style.display = 'none';
+    sf3.remove()
 });
-
-function getRandomColor() {
-    var rgbValues = [
-        [247, 178, 103],
-        [247, 157, 101],
-        [244, 132, 95],
-        [242, 112, 89],
-        [242, 92, 84]
-    ];
-    var randomIndex = Math.floor(Math.random() * rgbValues.length);
-    return `rgb(${rgbValues[randomIndex].join(', ')})`;
-}
-
-function startEnv() {
-
-    fetch('/env', {
-        method: 'POST',
-    })
-    .then(response => response.text())
-    .then(html => {
-        // would be nice to send the name here too
-        document.querySelector('body').style.backgroundImage = 'none';
-        document.querySelector('body').style.height= '69vh';
-        document.querySelector('body').innerHTML = html;
-        update_question();
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-}
-
 
 socket.on('redirect', function(data) {
     window.location.href = data.url;
 });
 
-// Add this in your JavaScript code
 socket.on('render_env_html', function(data) {
     document.querySelector('body').style.backgroundImage = 'none';
     document.querySelector('body').style.height = '69vh';

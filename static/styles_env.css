@@ -121,7 +121,7 @@ button {
 .row1 {
     width: inherit; /* Take the width from the parent (.result_div_2) */
     padding-left: 20px;
-    height: 40px;
+    height: calc(auto + 10px);
     font-size: 30px;
     margin-top: 30px;
     border-bottom: 1px solid #000000;

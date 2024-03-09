@@ -1,8 +1,6 @@
 var selectedFlag = null;
 var socket = io.connect('http://' + document.domain + ':' + location.port);
-// var socket = io.connect('http://localhost:5000');  // Replace with your server URL
-var xx = 1;
-console.log(xx+" ");
+
 function selectFlag(flag) {
     var button = document.getElementById('my-button');
 
@@ -55,16 +53,6 @@ function submitName() {
     socket.emit('submit_name', { text: text });
 }
 
-// function startGame() {
-//     socket.emit('start_game');
-// }
-
 socket.on('redirect', function(data) {
     window.location.href = data.url;
 });
-
-// socket.on('update_question', function(data) {
-//     var qDiv = document.getElementById("q");
-//     console.log(qDiv);
-//     qDiv.innerHTML = data.question;
-// });
