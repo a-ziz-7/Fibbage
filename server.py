@@ -30,6 +30,7 @@ answered_box = []
 correct_answer = []
 cr_an = ''
 
+player_end = []
 
 class Player:
     def __init__(self, name, sid, score=0) -> None:
@@ -168,13 +169,24 @@ def new_new():
     correct_answer = []
     socketio.emit('new_round')
 
+@socketio.on('end_game')
+def end_game():
+    global player_end
+    player_sid = request.sid
+    if player_sid not in player_end:
+        player_end.append(player_sid)
+        if len(active_players) == len(player_end):
+            final_results = ''
+            players.sort()
+            for i in players:
+                final_results += f'{i.name}*{i.score}|'
+            socketio.emit('end_game', {'scores':final_results[:-1]})
+
 def get_player(sid):
     global players
     for i in players:
         if i.sid == sid:
             return i
-    for i in range(10):
-        print('ERROR')
 
 def shuffle(x):
     d = {}

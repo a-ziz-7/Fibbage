@@ -1,10 +1,16 @@
 var socket = io.connect('http://' + document.domain + ':' + location.port);
 var ans;
-var turn = 0;
+var turn = 1;
+var turns = 5;
+var over = false;
 
 function submitA() {
     var a = document.getElementById('area');
     var b = document.getElementById('sumbit_fucking_3');
+    if (over) {
+        console.log('OVER DETECTED');
+        return;
+    }
     if (b) {
         if (b.style.display !== 'none') {
             console.log('case: scores shown area genrated');
@@ -40,25 +46,19 @@ var selectedElementId = null;
 
 function boxSelect(itemId) {
     var item = document.getElementById(itemId);
-    // console.log('BS HEADER');
     if (selectedElementId === itemId) {
-        // console.log('BS SELECTED_ID WAS SELECTED BEFORE');
         item.style.border = '';
         selectedElementId = null;
     } else {
-        // console.log('BS NEW SELECT');
         if (selectedElementId) {
             var prevSelectedElement = document.getElementById(selectedElementId);
             if (prevSelectedElement) {
-                // console.log('PREV CASE');
                 prevSelectedElement.style.border = '';
             } else {
                 console.error("Previously selected element not found for ID:", selectedElementId);
             }
         }
-        // console.log('SHOULD LIGHT UP!!!');
         selectedElementId = itemId;
-        // console.log(item.style.border);s
         item.style.border = '2px solid #ff0000';
         ans = item.id;
         socket.emit('box_selected', {ans:item.id});
@@ -96,7 +96,6 @@ function startEnv() {
 }
 
 socket.on('update_question', function(data) {
-    console.log('Received update_question event:', data);
     var qDiv = document.getElementById('q');
     var pDiv = document.getElementById('p');
     var sep = data.question.split("|")
@@ -124,7 +123,6 @@ socket.on('show_results', function(data) {
     ];
     pool.forEach(function(item) {
         x += 1
-        console.log(x);
         var pElement = document.createElement('div');
         pElement.textContent = item; // Assuming item is a string; adjust accordingly
         pElement.classList.add('pool_choice'); // Add the class 'pool_choice'
@@ -153,9 +151,6 @@ socket.on('show_answers', function(data) {
     resultDivv.style.display = 'flex';
 
     var tbr = document.getElementById('rd1');
-    console.log(tbr.innerHTML);
-    // tbr.innerHTML = '';
-    // tbr.style.display = 'none';
     tbr.remove();
 
     for (var i = 0; i < answer_data.length; i++) {
@@ -199,14 +194,67 @@ socket.on('show_answers', function(data) {
 
 socket.on('new_round', function(data) {
     console.log('new round generated');
-    update_question();
+    // selectedElementId = null;
+    var sf3 = document.getElementById('sumbit_fucking_3');
+    sf3.remove();
+    over = (turn == turns);
+    if (over) {
+        socket.emit('end_game');
+        return;
+    }
     var area = document.getElementById('area');
     area.style.display = 'flex';
     area.value = '';
-    selectedElementId = null;
-    var sf3 = document.getElementById('sumbit_fucking_3');
-    sf3.remove()
+    update_question();
+    turn += 1;
+
 });
+
+socket.on('end_game', function(data) {
+    var elem = document.getElementById('q_a');
+    var butt = document.getElementById('submit');
+    elem.remove();
+    butt.remove();
+    final_results = data.scores.split('|');
+    var container = document.createElement('div');
+    container.id = 'final_all';
+    var ffs = document.createElement('div');
+    ffs.textContent = 'Final Scores'
+    ffs.id = 'final';
+    container.appendChild(ffs);
+    // Loop through each element in final_results
+    for (var i = 0; i < final_results.length; i++) {
+        // Split the element into name and score
+        var playerData = final_results[i].split('*');
+        var playerName = playerData[0];
+        var playerScore = playerData[1];
+
+        // Create a div for the player's name
+        var nameDiv = document.createElement('div');
+        nameDiv.classList.add('final_name');
+        nameDiv.style.backgroundColor = getRandomColor();
+        nameDiv.textContent = (i + 1) + ') ' + playerName;
+
+        // Create a div for the player's score
+        var scoreDiv = document.createElement('div');
+        scoreDiv.classList.add('final_score');
+        scoreDiv.style.backgroundColor = getRandomColor();
+        scoreDiv.textContent = playerScore;
+
+        // Create a container div for both name and score divs
+        var resultDiv = document.createElement('div');
+        resultDiv.classList.add('final_line');
+        resultDiv.appendChild(nameDiv);
+        resultDiv.appendChild(scoreDiv);
+
+        // Append the result div to the container
+        container.appendChild(resultDiv);
+    }
+    document.querySelector('body').appendChild(container);
+
+    console.log(data.scores);
+});
+
 
 socket.on('redirect', function(data) {
     window.location.href = data.url;
@@ -216,5 +264,4 @@ socket.on('render_env_html', function(data) {
     document.querySelector('body').style.backgroundImage = 'none';
     document.querySelector('body').style.height = '69vh';
     document.querySelector('body').innerHTML = data.html;
-    update_question();
 });
