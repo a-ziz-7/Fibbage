@@ -182,7 +182,7 @@ socket.on('show_answers', function(data) {
             var fooledDiv = document.createElement('div');
             fooledDiv.classList.add('row2'); // Add a class to the fooledDiv
             fooledDiv.style.backgroundColor = getRandomColor();
-            fooledDiv.textContent = player_data[2].length > 0 ? 'Who got fooled: ' + player_data[2] : 'No one got fooled';
+            fooledDiv.textContent = player_data[2].length > 0 ? 'Players who got fooled: ' + player_data[2] : 'No one got fooled';
             playerDiv.appendChild(fooledDiv);
         }
 
