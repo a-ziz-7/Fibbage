@@ -1,5 +1,5 @@
 var socket = io.connect('http://' + document.domain + ':' + location.port);
-var ans;
+var ans = -1;
 var turn = 1;
 var turns = 5;
 var over = false;
@@ -24,6 +24,10 @@ function submitA() {
         console.log('case: text area read and boxes generate');
         a = null;
     } else {
+        if (ans == -1) {
+            alert('Select an answer!');
+            return;
+        }
         console.log('case: boxes read and scores generate');
         socket.emit('answer_submited', {ans:ans});
     }
@@ -54,8 +58,6 @@ function boxSelect(itemId) {
             var prevSelectedElement = document.getElementById(selectedElementId);
             if (prevSelectedElement) {
                 prevSelectedElement.style.border = '';
-            } else {
-                console.error("Previously selected element not found for ID:", selectedElementId);
             }
         }
         selectedElementId = itemId;
@@ -205,6 +207,7 @@ socket.on('new_round', function(data) {
     var area = document.getElementById('area');
     area.style.display = 'flex';
     area.value = '';
+    ans = -1;
     update_question();
     turn += 1;
 

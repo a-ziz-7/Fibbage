@@ -44,7 +44,7 @@ class Player:
         return self.score > __value.score
     
     def __str__(self) -> str:
-        return f"Player: {self.name} with {self.score} points ({self.fooled})"
+        return f"Player: {self.name} with {self.score} points ({', '.join(self.fooled)})"
 
 @app.route('/')
 def index():
@@ -72,11 +72,13 @@ def submit_name(data):
         active_players.append(player_sid)
         player = Player(text_data, player_sid)
         players.append(player)
-        print('CREATED')
+        print(f'{text_data} <--> CREATED')
+        print(players,'\n')
     else:
-        players[active_players.index(player_sid)].name = text_data
-    print(players[active_players.index(player_sid)].name)
-    print(players)
+        if players[active_players.index(player_sid)].name != text_data:
+            print(f'{players[active_players.index(player_sid)].name} renamed to --> {text_data}')
+            players[active_players.index(player_sid)].name = text_data
+    
     
 @socketio.on('update_question')
 def update_question():
@@ -88,7 +90,7 @@ def update_question():
     question_data = f"{sentences[ran_num][languages[1]]}|{sentences[ran_num][languages[2]].lower()}"
     pool = [sentences[ran_num][languages[0]]]
     cr_an = sentences[ran_num][languages[0]]
-    print(f"{question_data}")
+    print(f"The question generated:\n{sentences[ran_num][languages[1]]}\n\n")
     socketio.emit('update_question', {'question': question_data}, room=None)
  
 @socketio.on('start_game')
@@ -99,11 +101,9 @@ def start_game():
 def submit_a(data):
     global answered, pool, map_pool
     answer = data.get('answer', '')
-    print(answer)
     player_sid = request.sid
     if player_sid not in answered:
         answered.append(player_sid)
-        print(players, "\n  ", answered)
         temp_player = get_player(player_sid)
         temp_player.guess = answer
         if len(answered) == len(active_players):
@@ -111,16 +111,19 @@ def submit_a(data):
                 pool.append(i.guess)
             map_pool = shuffle(pool)
             correct_pool = "|".join(pool)
-            print(pool)
+            print(f'The pool: {pool}')
             socketio.emit('show_results', {'pool':correct_pool})
     
 @socketio.on('box_selected')
 def box_selected(responce):
-    print(responce)
+    # print(responce)
+    pass
 
 @socketio.on('answer_submited')
 def answer_submited(responce):
     global answered_box, cr_an
+    if int(responce['ans']) == -1:
+        return
     player_sid = request.sid
     if player_sid not in answered_box:
         answered_box.append(player_sid)
@@ -135,13 +138,11 @@ def answer_submited(responce):
         else:
             players[choice-1].fooled.append(mp.name)
             players[choice-1].score += 1
-        print(answered_box, active_players, len(answered_box) == len(active_players))
         if len(answered_box) == len(active_players):
             x = f'0*{cr_an}*{", ".join(correct_answer)}|'
             x += chopchopselection()
-            print(x)
             socketio.emit('show_answers', {'answers':x})
-        print_mp()
+            print_mp()
 
 @socketio.on('disconnect')
 def handle_disconnect():
@@ -201,8 +202,10 @@ def shuffle(x):
 
 def print_mp():
     global players
+    print('\nPlayer Scores:')
     for i in players:
         print(i)
+    print('-------------------------\nNEW ROUND!!!\n')
 
 def chopchopselection():
     global players
@@ -221,4 +224,4 @@ def clear():
         i.fooled = []
 
 if __name__ == '__main__':
-    socketio.run(app, debug=True)
+    socketio.run(app, debug=True, host='0.0.0.0', port=5000)
