@@ -1,4 +1,3 @@
-import uuid
 from flask import Flask, render_template, request, jsonify
 from flask_socketio import SocketIO
 import json
@@ -38,7 +37,7 @@ class Player:
         self.sid = sid
         self.score = score
         self.guess = None
-        self.choice = None
+        # self.choice = None
         self.fooled = []
     
     def __lt__(self, __value: object) -> bool:
@@ -218,7 +217,7 @@ def clear():
     global players
     for i in players:
         i.guess = None
-        i.choice = None
+        # i.choice = None
         i.fooled = []
 
 if __name__ == '__main__':
