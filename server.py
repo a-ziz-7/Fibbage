@@ -4,7 +4,7 @@ import json
 import random
 
 app = Flask(__name__)
-socketio = SocketIO(app)
+socketio = SocketIO(app, cors_allowed_origins="*")
 
 json_data = open('my_sentences.json','r')
 
@@ -78,7 +78,6 @@ def submit_name(data):
         if players[active_players.index(player_sid)].name != text_data:
             print(f'{players[active_players.index(player_sid)].name} renamed to --> {text_data}')
             players[active_players.index(player_sid)].name = text_data
-    
     
 @socketio.on('update_question')
 def update_question():
@@ -224,4 +223,4 @@ def clear():
         i.fooled = []
 
 if __name__ == '__main__':
-    socketio.run(app, debug=True, host='0.0.0.0', port=5000)
+    socketio.run(app, debug=True, host='0.0.0.0')

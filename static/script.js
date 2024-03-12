@@ -1,4 +1,5 @@
 var selectedFlag = null;
+// var socket = io.connect('http://146.245.242.54:5000');
 var socket = io.connect('http://' + document.domain + ':' + location.port);
 
 function selectFlag(flag) {

@@ -1,3 +1,4 @@
+// var socket = io.connect('http://146.245.242.54:5000');
 var socket = io.connect('http://' + document.domain + ':' + location.port);
 var ans = -1;
 var turn = 1;
