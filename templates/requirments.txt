@@ -50,3 +50,7 @@ socketio==0.2.1
 tzdata==2023.4
 Werkzeug==3.0.1
 wsproto==1.2.0
+Flask-SocketIO
+eventlet
+gevent
+gevent-websocket
