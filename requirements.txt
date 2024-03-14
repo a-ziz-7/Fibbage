@@ -17,7 +17,7 @@ python-socketio==5.11.1
 pytweening==1.1.0
 pytz==2023.4
 rubicon-objc==0.4.7
-setuptools==3.3
+setuptools==69.2.0
 simple-websocket==1.0.0
 six==1.16.0
 socketio==0.2.1
