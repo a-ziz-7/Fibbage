@@ -83,7 +83,6 @@ function getRandomColor() {
 }
 
 function startEnv() {
-
     fetch('/env', {
         method: 'POST',
     })

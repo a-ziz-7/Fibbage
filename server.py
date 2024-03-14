@@ -223,8 +223,9 @@ def clear():
         i.fooled = []
 
 if __name__ == '__main__':
-    # 67.85.24.200
-    socketio.run(app, debug=True, host='0.0.0.0', port=5000)
+    socketio.run(app, debug=True, host='0.0.0.0')
+    # socketio.run(app, debug=True, host='0.0.0.0', port=5000)
+    # socketio.run(app, debug=True, host='146.245.244.247', port=5000)
     # socketio.run(app, debug=True, host='192.0.0.2', port=5000)
     # socketio.run(app, debug=True, host='192.168.1.30', port=5000)
 

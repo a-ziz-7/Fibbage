@@ -31,10 +31,6 @@ body {
     margin: 10px;
 }
 
-.all_flags img {
-    max-width: 100%; 
-}
-
 #my-button {
     color: rgb(53, 213, 103);
     font-size: larger;
