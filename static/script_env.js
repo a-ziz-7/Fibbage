@@ -66,7 +66,7 @@ function boxSelect(itemId) {
         selectedElementId = itemId;
         item.style.border = '2px solid #ff0000';
         ans = item.id;
-        socket.emit('box_selected', {ans:item.id});
+        // socket.emit('box_selected', {ans:item.id});
     }
 }
 

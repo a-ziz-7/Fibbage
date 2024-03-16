@@ -113,11 +113,6 @@ def submit_a(data):
             print(f'The pool: {pool}')
             socketio.emit('show_results', {'pool':correct_pool})
     
-@socketio.on('box_selected')
-def box_selected(responce):
-    # print(responce)
-    pass
-
 @socketio.on('answer_submited')
 def answer_submited(responce):
     global answered_box, cr_an
@@ -152,7 +147,7 @@ def handle_disconnect():
         if player:
             players.remove(player)
             print(f"Player {player.name} disconnected.")
-    print(players)
+    print(f'Active Players: {active_players}\nPlayers: {players}\n')
 
 @app.route('/game_env')
 def game_env():
@@ -164,8 +159,8 @@ def new_new():
     answered = []
     pool = []
     answered_box = []
-    clear()
     correct_answer = []
+    clear()
     socketio.emit('new_round')
 
 @socketio.on('end_game')
@@ -212,20 +207,19 @@ def chopchopselection():
     ans = ""
     for i in players:
         ans += i.name+"*"+i.guess+"*"+", ".join(i.fooled)+"*"+str(i.score)+"|"
-    ans = ans[:-1]
-    return ans
+    return ans[:-1]
 
 def clear():
     global players
     for i in players:
         i.guess = None
-        # i.choice = None
         i.fooled = []
+
+# @socketio.on('box_selected')
+# def box_selected(responce):
+#     # print(responce)
+#     pass
+
 
 if __name__ == '__main__':
     socketio.run(app, debug=True, host='0.0.0.0')
-    # socketio.run(app, debug=True, host='0.0.0.0', port=5000)
-    # socketio.run(app, debug=True, host='146.245.244.247', port=5000)
-    # socketio.run(app, debug=True, host='192.0.0.2', port=5000)
-    # socketio.run(app, debug=True, host='192.168.1.30', port=5000)
-
