@@ -4,7 +4,7 @@ var selectedFlag = null;
 // var socket = io.connect('http://' + document.domain + ':' + location.port);
 var socket = io('https://fibbage-fm-6187e6c25f64.herokuapp.com');
 
-console.log('socket: ', 'http://' + document.domain + ':' + location.port);
+console.log('socket: ', socket);
 // var socket = io.connect('http://127.0.0.1:5000');
 
 function selectFlag(flag) {
