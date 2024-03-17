@@ -47,7 +47,7 @@ pytz==2023.4
 setuptools
 simple-websocket==1.0.0
 six==1.16.0
-socketio
+socketio==4.0.1
 tzdata==2023.4
 Werkzeug==3.0.1
 wheel==0.43.0
