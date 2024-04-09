@@ -86,7 +86,7 @@ async function main() {
       pool.push(guess);
     }
 
-    console.clear(); // Clear console
+    console.clear(); 
     const orderedPool = [...pool];
     const shuffledIndices = shuffle(pool);
 
@@ -111,7 +111,7 @@ async function main() {
         // Do nothing
       }
 
-      console.clear(); // Clear console
+      console.clear(); 
     }
 
     console.log(`Sentence: '${entity.spanish}'\n`);
@@ -139,7 +139,7 @@ async function main() {
       await prompt('\nPRESS ENTER');
     } else {
       await prompt('\nPRESS ENTER FOR FINAL SCORES');
-      console.clear(); // Clear console
+      console.clear(); 
     }
 
     clear(allPlayers);
