@@ -126,4 +126,5 @@ def main():
 
 
 
-main()
+if __name__ == "___main__":
+    main()
