@@ -1,2 +1,4 @@
 .DS_Store
 /AI_help
+./AI_help/.DS_Store
+.venv
