@@ -4,6 +4,8 @@ import json
 import random
 import copy
 
+# filly AI generated server
+
 app = Flask(__name__)
 socketio = SocketIO(app)
 
