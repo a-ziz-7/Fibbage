@@ -3,16 +3,12 @@ import random
 import os
 import copy
 import time
-# some changes
 os.system('clear')
 
 sentences = open('my_sentences.json','r')
-# print(sentences)
 
 data = json.load(sentences)
 len_data = len(data['sentences'])
-# print(len_data)
-# print(type(data))
 
 class Player:
 
