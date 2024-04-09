@@ -149,9 +149,10 @@ async function main() {
     while (turn < numTurns + 1) {
       await playTurn();
     }
-
+    
+    console.log('Final Scores!!!\n');
     console.log('----------------------------------------------\n');
-    console.log('Final Scores!!!');
+    
     const sortedPlayers = allPlayers.slice(1).sort((a, b) => b.score - a.score);
 
     for (let i = 0; i < sortedPlayers.length; i++) {
