@@ -5,7 +5,7 @@ import copy
 import time
 os.system('clear')
 
-sentences = open('my_sentences.json','r')
+sentences = open('../my_sentences.json','r')
 
 data = json.load(sentences)
 len_data = len(data['sentences'])
@@ -111,7 +111,7 @@ def main():
             os.system('clear')
         clear(all_players)
             
-            
+
     print(f'----------------------------------------------\n')
     print('Final Scores!!!')
     all_players = all_players[1:]
