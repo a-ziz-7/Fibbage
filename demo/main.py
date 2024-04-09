@@ -69,7 +69,6 @@ def main():
         pool.append(entity['english'])
         for i in range(1,num_players):
             os.system('clear')
-            # give each player 30 seconds to answer, if doesnt answer then empty string
             print(f"The sentence is:\n{entity['spanish']}\n{entity['spanish_pronunciation']} - pronuanciation")
             guess = input(f'{all_players[i].name} enter you aproximation: ')
             all_players[i].guess = guess
