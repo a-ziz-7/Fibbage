@@ -5,7 +5,7 @@ import copy
 import time
 os.system('clear')
 
-sentences = open('../my_sentences.json','r')
+sentences = open('/Users/aziz/Documents/VS Code Projects/Fibbage/my_sentences.json','r')
 
 data = json.load(sentences)
 len_data = len(data['sentences'])
@@ -122,5 +122,4 @@ def main():
 
 
 
-if __name__ == "___main__":
-    main()
+main()
