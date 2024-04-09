@@ -17,9 +17,11 @@ class Player:
         self.choice = None
         self.fooled = []
     
+    # to be able to call sort on the list of players
     def __lt__(self, __value: object) -> bool:
         return self.score > __value.score
     
+    # the right formatiing for player information
     def __str__(self) -> str:
         return f"Player: {self.name} with {self.score} points"
 
