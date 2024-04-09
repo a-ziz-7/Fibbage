@@ -44,6 +44,7 @@ def shuffle(x):
 
 
 def main():
+    # all_players always contains a 'game' player for logical reasons
     all_players = [Player('game')]
 
     num_players = int(input("Enter the amount of players: "))
