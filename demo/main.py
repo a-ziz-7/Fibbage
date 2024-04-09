@@ -2,7 +2,6 @@ import json
 import random
 import os
 import copy
-import time
 os.system('clear')
 
 sentences = open('/Users/aziz/Documents/VS Code Projects/Fibbage/my_sentences.json','r')
