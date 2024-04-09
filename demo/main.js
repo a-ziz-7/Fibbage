@@ -165,4 +165,5 @@ async function main() {
   await runGame();
 }
 
+// start the main loop
 main();
