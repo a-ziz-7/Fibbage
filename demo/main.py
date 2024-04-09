@@ -112,7 +112,7 @@ def main():
         clear(all_players)
             
 
-    print(f'---------------------------------------------\n')
+    print(f'----------------------------------------------\n')
     print('Final Scores!!!')
     all_players = all_players[1:]
     all_players.sort()
