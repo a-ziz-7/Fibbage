@@ -81,7 +81,6 @@ def main():
             print(f'Please select the right answer from the pool of the answers:')
             for j in range(len(pool)):
                 print(f"{j+1}) {pool[j]}")
-            
             choice = int(input(f"{all_players[i].name}: "))
             all_players[i].choice = choice
             if ds[choice-1] == 0:
@@ -111,6 +110,7 @@ def main():
             input('\nPRESS ENTER FOR FINAL SCORES')
             os.system('clear')
         clear(all_players)
+            
             
     print(f'----------------------------------------------\n')
     print('Final Scores!!!')
