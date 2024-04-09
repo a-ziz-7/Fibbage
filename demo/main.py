@@ -118,7 +118,7 @@ def main():
     all_players.sort()
     for i in range(len(all_players)):
         print(f'{i+1}) {all_players[i]}')
-    print(f'\n----------------------------------------------')
+    print(f'\n---------------------------------------------')
 
 
 
