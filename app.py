@@ -215,11 +215,5 @@ def clear():
         i.guess = None
         i.fooled = []
 
-# @socketio.on('box_selected')
-# def box_selected(responce):
-#     # print(responce)
-#     pass
-
-
 if __name__ == '__main__':
     socketio.run(app, debug=True, host='0.0.0.0')
