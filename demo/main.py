@@ -110,10 +110,11 @@ def main():
             input('\nPRESS ENTER FOR FINAL SCORES')
             os.system('clear')
         clear(all_players)
-            
 
+            
+    print('Final Scores!!!\n')
     print(f'----------------------------------------------\n')
-    print('Final Scores!!!')
+    
     all_players = all_players[1:]
     all_players.sort()
     for i in range(len(all_players)):
