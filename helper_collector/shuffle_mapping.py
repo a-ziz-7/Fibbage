@@ -1,5 +1,7 @@
 import random
 
+# shuffle algorithm that shuffles the answer well but also maps to the index of the original list
+# since I need to know what player's answer it was to compute the points
 def shuffle(x):
     d = {}
     for i in range(len(x)):
